@@ -1,130 +1,158 @@
-# Firewall & Security Topology System
+# Sistema Avançado de Firewall e Análise de Segurança
 
-## 📌 Visão Geral
+## 🌐 Visão Geral do Sistema
 
-Este projeto combina um firewall eficiente com um sistema de análise de segurança em camadas, protegendo redes contra ameaças através de filtragem de tráfego e análise comportamental em ambiente isolado.
+Este projeto integra um firewall de última geração com um sofisticado sistema de análise de ameaças, oferecendo:
 
-## ✨ Funcionalidades Principais
+- Proteção em tempo real contra ameaças conhecidas e desconhecidas
+- Análise comportamental avançada em ambiente isolado
+- Integração completa com SOC (Security Operations Center)
+- Coleta forense automatizada para investigação pós-incidente
 
-### Firewall
-- Filtragem de pacotes por IP, porta e protocolo
-- Suporte para regras de entrada/saída (INPUT/OUTPUT)
-- Bloqueio de portas vulneráveis
-- Configuração simplificada via arquivo de regras
-- Suporte a IPv4
+## 🛡️ Funcionalidades Principais
 
-### Sistema de Segurança
-- Camadas de verificação de requisições
-- Ambiente sandbox para análise de ameaças
-- Integração com SOC (Security Operations Center)
-- Registro completo de logs
-- Armazenamento de dados de telemetria
+### 🔥 Firewall Inteligente
+| Feature | Descrição |
+|---------|-----------|
+| Filtro Multidimensional | Analisa IP, porta, protocolo e padrões de tráfego |
+| Aprendizado Contínuo | Adapta-se a novos padrões de ataque automaticamente |
+| Proteção em Camadas | Defesa em profundidade com múltiplos níveis de verificação |
+| Dashboard em Tempo Real | Visualização imediata de ameaças bloqueadas |
 
-## 🔧 Topologia do Sistema
-
+### 🕵️ Sistema de Análise de Ameaças
 ```mermaid
 graph TD
- n1["Requisição <br>"] --> n5["Verificação <br>"]
-    n5 --> n2["Seguro <br>"] & n4["Estranho <br>"]
-    n2 --> n3["LOG <br>"]
-    n4 --> n6["Sand Box<br>Homologação"]
-    n6 --> n8["LOG <br>"] & n7["Sistema de Armazenamento<br>de Atividades Suspeitas"] & n9["Seguro? <br>"]
-    n9 --> n10["Sim <br>"] & n11["Não <br>"]
-    n10 --> n12["LOG <br>"]
-    n11 --> n13["API Alarme<br>SOC"] & n14["API Abertura de<br>Caso Forense"]
+    n1["Requisição"] --> n5["Verificação Inicial"]
+    n5 -->|Normal| n2["Processamento Padrão"]
+    n5 -->|Suspeita| n4["Análise Avançada"]
+    n2 --> n3["Registro em LOG"]
+    n4 --> n6["Sandbox de Homologação"]
+    n6 --> n9["Avaliação Final"]
+    n9 -->|Limpa| n12["Liberação com LOG"]
+    n9 -->|Maliciosa| n13["Bloqueio Imediato"]
+    n13 --> n14["Notificação SOC"]
+    n13 --> n15["Coleta Forense"]
 ```
 
-### Fluxo de Processamento
+## 🚀 Implementação
 
-1. **Entrada de Requisições**:
-   - Todas as requisições são registradas em LOG
-   - Envio de alertas para SOC quando necessário
-   - Processamento principal através do firewall
+### 📋 Requisitos Técnicos
+- **Hardware Mínimo**:
+  - 4 vCPUs
+  - 8GB RAM
+  - 50GB SSD (Para armazenamento de logs)
 
-2. **Camadas de Verificação**:
-   - Verificação inicial pelas regras do firewall
-   - Armazenamento de dados de telemetria
-   - Análise comportamental para identificar ameaças
+- **Software**:
+  - Ubuntu 22.04 LTS / Debian 11+
+  - Python 3.9+
+  - Docker CE (Para isolamento sandbox)
+  - Elastic Stack (Opcional para análise de logs)
 
-3. **Sandbox de Segurança**:
-   - Requisições suspeitas são isoladas
-   - Análise profunda em ambiente controlado
-   - Decisão final: liberar ou bloquear
-
-## 🛠️ Pré-requisitos
-
-- Sistema Linux (Ubuntu/Debian recomendado)
-- iptables instalado
-- Python 3.x (para módulos de análise)
-- 2GB+ RAM (para operação do sandbox)
-- Acesso root/sudo
-
-## ⚙️ Instalação
-
+### 🛠️ Instalação Automatizada
 ```bash
-git clone https://github.com/morteerror404/firewall.git
+# Clone o repositório
+git clone --depth 1 https://github.com/morteerror404/firewall.git
 cd firewall
-chmod +x install.sh
-sudo ./install.sh
+
+# Execute o instalador inteligente
+sudo ./install.sh --with-sandbox --with-monitoring
+
+# Verifique a instalação
+sudo ./healthcheck.sh
 ```
 
-## 📝 Configuração
+## ⚙️ Configuração Avançada
 
-1. **Firewall**:
-   Edite `rules.conf` no formato:
-   ```
-   [chain] [protocol] [port] [action] [source]
-   ```
+### 🔧 Arquivo de Regras (YAML Format)
+```yaml
+rules:
+  - name: "Proteção SSH"
+    chain: INPUT
+    protocol: tcp
+    port: 22
+    action: ACCEPT
+    source: 192.168.1.0/24
+    log: true
 
-2. **Sistema de Segurança**:
-   Configure parâmetros em `security_config.ini`:
-   ```ini
-   [sandbox]
-   memory_limit = 512MB
-   timeout = 30s
-   
-   [soc]
-   api_endpoint = https://soc.example.com/alerts
-   ```
+  - name: "Bloqueio Ransomware"
+    pattern: "*.locky"
+    action: DROP
+    severity: critical
+```
 
-## 🚀 Como Usar
+### 🛡️ Configuração do Sandbox
+```ini
+[sandbox]
+timeout = 60s
+memory_limit = 1GB
+cpu_quota = 50%
+network = isolated
 
+[forensics]
+auto_collect = true
+retention_days = 30
+```
+
+## 📊 Monitoramento e Análise
+
+### Comandos Úteis:
 ```bash
-# Iniciar sistema completo
-sudo ./start_system.sh
+# Visualizar tráfego em tempo real
+sudo ./monitor.sh --live --filter suspicious
 
-# Visualizar logs
-sudo ./log_viewer.sh
+# Gerar relatório diário
+sudo ./report.sh --daily --format pdf
 
-# Testar sandbox
-sudo ./test_sandbox.sh sample_request.json
+# Testar novas regras
+sudo ./test-rules.sh --dry-run rules/new_rules.yaml
 ```
 
-## 📊 Regras Padrão
+## 🔄 Fluxo de Trabalho Recomendado
 
-| Porta | Protocolo | Ação      | Descrição               |
-|-------|-----------|-----------|-------------------------|
-| 22    | TCP       | ACCEPT    | SSH (apenas redes locais)|
-| 80    | TCP       | ACCEPT    | HTTP                    |
-| 443   | TCP       | ACCEPT    | HTTPS                   |
-| *     | ICMP      | DROP      | Bloqueio de ping        |
-| *     | *         | REJECT    | Política padrão         |
+1. **Desenvolvimento**:
+   - Use o branch `dev` para testes
+   - Verifique regras com `--dry-run` antes de aplicar
+
+2. **Produção**:
+   - Implemente gradualmente com `--rollout phased`
+   - Monitore com `watch -n 5 ./monitor.sh`
+
+3. **Manutenção**:
+   - Atualize regras semanalmente
+   - Revise logs diariamente
+
+## 📌 Melhores Práticas
+
+1. **Segurança**:
+   - Sempre teste em ambiente staging
+   - Mantenha backups diários das configurações
+   - Use autenticação multifator para acesso
+
+2. **Performance**:
+   - Otimize regras prioritárias
+   - Balanceie carga entre nós em clusters
+   - Monitore uso de recursos
 
 ## 🤝 Contribuição
 
-1. Faça um fork do projeto
-2. Crie sua branch (`git checkout -b feature/nova-feature`)
-3. Commit suas mudanças (`git commit -m 'Add new feature'`)
-4. Push para a branch (`git push origin feature/nova-feature`)
-5. Abra um Pull Request
+Siga nosso processo de contribuição:
 
-## 📄 Licença
+1. Submeta issues no GitHub
+2. Discuta propostas no Slack
+3. Envie PRs com:
+   - Testes unitários
+   - Documentação atualizada
+   - Análise de impacto
 
-MIT License - Veja [LICENSE](LICENSE) para detalhes.
+## 📜 Licença e Suporte
 
-## ⚠️ Aviso de Segurança
+**Licença**: AGPLv3 - Consulte [LICENSE.md](LICENSE.md)
 
-Este sistema modifica configurações críticas de rede. Sempre:
-- Teste em ambiente controlado antes de produção
-- Mantenha backups das configurações originais
-- Monitore os logs após implementação
+**Suporte Comercial**: Disponível através de nosso [programa Enterprise](https://example.com/enterprise)
+
+---
+
+Este sistema evolui constantemente. Recomendamos:
+- Atualizações mensais de segurança
+- Participação em nossa comunidade
+- Treinamentos trimestrais para administradores
