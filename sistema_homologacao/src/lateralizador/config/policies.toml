@@ -1,0 +1,15 @@
+[default]
+threshold = 75.0
+log_level = "info"
+
+[tcp]
+ports = [22, 3389, 5900]
+patterns = [
+    "root:",
+    "admin:",
+    "SELECT * FROM",
+]
+
+[udp]
+ports = [53, 161, 123]
+rate_limit = "100/60s"
