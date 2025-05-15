@@ -148,8 +148,6 @@ impl Firewall {
 
 ---
 
-```markdown
-
 # Sistema Avançado de Homologação com Honeypot Integrado
 
 ![Diagrama de Arquitetura](docs/architecture.png)
