@@ -122,3 +122,76 @@ Para contribuir com o módulo UDP:
 - Monitoramento constante de tráfego
 - Atualizações frequentes das regras
 - Combinação com outros mecanismos de segurança
+
+## 🚀 Como Usar
+
+### Requisição UDP GET:
+```rust
+use firewall::Protocols::UDP::get;
+
+fn main() -> std::io::Result<()> {
+    get::execute_udp_get("127.0.0.1:8080", "api.example.com", "/data", 5)?;
+    Ok(())
+}
+```
+
+### Requisição UDP POST:
+```rust
+use firewall::Protocols::UDP::post;
+
+fn main() -> std::io::Result<()> {
+    post::execute_udp_post(
+        "127.0.0.1:8080", 
+        "api.example.com", 
+        "/submit", 
+        "user=test&data=123", 
+        5
+    )?;
+    Ok(())
+}
+```
+
+## 🔍 Saída de Exemplo (UDP POST)
+
+```
+🚀 Enviando UDP POST para 127.0.0.1:8080 (32 bytes)
+
+📥 Resposta recebida em 12.345ms
+🔍 Análise Detalhada do Pacote UDP POST (64 bytes)
+------------------------------------------------------------
+🌐 Origem: 127.0.0.1:8080
+
+📝 Estrutura POST:
+   Path: /submit
+   Host: api.example.com
+   Data: 14 bytes
+
+📊 Conteúdo dos Dados:
+Offset    Binário        Hex      Decimal   ASCII
+--------  --------       --      -------   -----
+00000000  01110101       75       117       u
+00000001  01110011       73       115       s
+00000002  01100101       65       101       e
+...
+```
+
+## ✨ Recursos Implementados
+
+1. **Geração de Pacotes**:
+   - GET com formato otimizado
+   - POST com separação clara de metadados e dados
+
+2. **Análise Profunda**:
+   - Visualização em hexadecimal, binário e decimal
+   - Interpretação de estrutura de pacotes
+   - Análise de cabeçalho simulado
+
+3. **Funcionalidades Avançadas**:
+   - Timeout configurável
+   - Bind automático em porta aleatória
+   - Medição de tempo de resposta
+
+4. **Segurança**:
+   - Tratamento de erros robusto
+   - Proteção contra buffer overflow
+   - Validação de dados UTF-8

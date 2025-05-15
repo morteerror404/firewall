@@ -114,3 +114,70 @@ Para contribuir com o módulo TCP:
 ---
 
 **Nota**: Este módulo trabalha em conjunto com a implementação UDP para proteção completa da camada de transporte.
+
+---
+
+## 🚀 Como Usar
+
+### Para requisições GET:
+```rust
+use firewall::Protocols::TCP::get;
+
+fn main() -> std::io::Result<()> {
+    get::execute_get("example.com", 80, "/api/data")?;
+    Ok(())
+}
+```
+
+### Para requisições POST:
+```rust
+use firewall::Protocols::TCP::post;
+
+fn main() -> std::io::Result<()> {
+    post::execute_post("example.com", 80, "/api/submit", "user=test&data=123")?;
+    Ok(())
+}
+```
+
+## 🔍 Saída de Exemplo (GET)
+
+```
+🚀 Enviando GET para example.com/api/data
+🔍 Análise Detalhada do Pacote (512 bytes)
+-------------------------------------------
+📦 Cabeçalho TCP:
+🔢 Hexadecimal:
+   45 00 00 34 12 34 00 00 40 06 00 00 7F 00 00 01 
+   7F 00 00 01 
+🔣 Binário:
+   01000101
+   00000000
+   ...
+🔢 Decimal:
+   Byte 0: 69
+   Byte 1: 0
+   ...
+📄 Dados HTTP:
+HTTP/1.1 200 OK
+Content-Type: application/json
+...
+```
+
+## ✨ Recursos Implementados
+
+1. **Geração de Requisições**:
+   - GET com cabeçalhos padrão
+   - POST com corpo personalizado
+
+2. **Análise Profunda**:
+   - Exibição em hexadecimal, binário e decimal
+   - Identificação de flags TCP
+   - Tradução ASCII com offsets
+
+3. **Segurança**:
+   - Timeouts configuráveis
+   - Tratamento de erros robusto
+
+4. **Extensibilidade**:
+   - Fácil adição de novos cabeçalhos
+   - Suporte para diferentes content types

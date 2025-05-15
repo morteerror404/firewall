@@ -1,14 +1,22 @@
 [package]
-name = "meu_projeto"  
+name = "firewall-tests"
 version = "0.1.0" # beta      
-authors = ["Joao Pedro Frota (morte_404) <joaopedrofrotacontato@gmail.com> pt_BR & es_en "]
+authors = ["Joao Pedro Frota (morte_404) <joaopedrofrotacontato@gmail.com> pt_BR & us_en "]
 edition = "2025"      
 
 [dependencies]
-tokio = { version = "1.0", features = ["full"] }
-serde = { version = "1.0", features = ["derive"] } 
+anyhow = "1.0"
 async-std = "1.12"
-socket2 = "0.4"
+bytes = "1.0"
+env_logger = "0.9"
+log = "0.4"
 pnet = "0.31"
-log = "0.4" 
-env_logger = "0.9"  
+pretty_env_logger = "0.4"
+pretty_hex = "0.3"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+socket2 = "0.4"
+tokio = { version = "1.0", features = ["full"] }
+
+[dev-dependencies]
+rstest = "0.12"
