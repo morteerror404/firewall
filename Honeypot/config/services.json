@@ -1,0 +1,9 @@
+{
+  "sensitive_ports": [22, 3306, 5432],
+  "alert_threshold": 85,
+  "response_strategy": {
+    "low_risk": "log_only",
+    "medium_risk": "delay_response",
+    "high_risk": "block_ip"
+  }
+}

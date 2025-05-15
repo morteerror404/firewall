@@ -8,9 +8,13 @@ edition = "2025"
 anyhow = "1.0"
 async-std = "1.12"
 bytes = "1.0"
+calamine = { version = "0.19", features = ["xlsx"] }
+csv = "1.1"
+docker-api = "0.12"
 env_logger = "0.9"
 log = "0.4"
 pnet = "0.31"
+polars = { version = "0.25", features = ["csv", "json"] }
 pretty_env_logger = "0.4"
 pretty_hex = "0.3"
 serde = { version = "1.0", features = ["derive"] }

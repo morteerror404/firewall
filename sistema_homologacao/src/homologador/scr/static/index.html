@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Sistema de Homologação</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Teste de Homologação</h1>
+        
+        <form id="homologationForm">
+            <div class="form-group">
+                <label for="protocol">Protocolo:</label>
+                <select id="protocol" required>
+                    <option value="TCP">TCP</option>
+                    <option value="UDP">UDP</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="sourceIP">IP de Origem:</label>
+                <input type="text" id="sourceIP" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="packetData">Dados do Pacote:</label>
+                <textarea id="packetData" rows="5" required></textarea>
+            </div>
+            
+            <button type="submit">Enviar para Homologação</button>
+        </form>
+        
+        <div id="resultContainer" class="hidden">
+            <h2>Resultado da Análise</h2>
+            <div id="analysisResult"></div>
+            <a href="/report" class="report-link">Ver Relatório Completo</a>
+        </div>
+    </div>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>
