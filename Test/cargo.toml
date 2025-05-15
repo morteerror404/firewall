@@ -1,0 +1,14 @@
+[package]
+name = "meu_projeto"  
+version = "0.1.0" # beta      
+authors = ["Joao Pedro Frota (morte_404) <joaopedrofrotacontato@gmail.com> pt_BR & es_en "]
+edition = "2025"      
+
+[dependencies]
+tokio = { version = "1.0", features = ["full"] }
+serde = { version = "1.0", features = ["derive"] } 
+async-std = "1.12"
+socket2 = "0.4"
+pnet = "0.31"
+log = "0.4" 
+env_logger = "0.9"  
