@@ -1,46 +1,116 @@
-### **Estrutura de um Pacote TCP**
-Um pacote TCP é formado por um **cabeçalho (header)** seguido pelos **dados (payload)**. O cabeçalho contém campos essenciais para o controle da comunicação:
+# Firewall TCP Avançado
 
-| **Campo**               | **Tamanho (bits)** | **Função**                                                                 |
-|--------------------------|-------------------|---------------------------------------------------------------------------|
-| **Porta de Origem**      | 16                | Identifica o aplicativo no dispositivo de origem.                         |
-| **Porta de Destino**     | 16                | Identifica o aplicativo no dispositivo de destino.                        |
-| **Número de Sequência**  | 32                | Ordena os pacotes para reconstruir os dados corretamente.                 |
-| **Número de Confirmação**| 32                | Indica o próximo byte esperado pelo receptor (ACK).                       |
-| **Offset de Dados**      | 4                 | Tamanho do cabeçalho (em palavras de 32 bits).                            |
-| **Flags**                | 9                 | Controles como **SYN** (inicia conexão), **ACK** (confirmação), **FIN** (encerra conexão), etc. |
-| **Janela de Recepção**   | 16                | Tamanho do buffer disponível para receber dados (controle de fluxo).      |
-| **Checksum**             | 16                | Verifica a integridade do cabeçalho e dos dados.                          |
-| **Urgent Pointer**       | 16                | Indica dados urgentes (raro de ser usado).                                |
+## 🌐 Visão Geral do Sistema
+
+Baseado na estrutura do repositório GitHub, este módulo TCP oferece proteção avançada para comunicações baseadas no protocolo TCP, com foco especial em operações GET e POST.
+
+## 📁 Estrutura do Projeto (TCP)
+
+```
+firewall/
+├── Protocols/
+│   ├── TCP/
+│   │   ├── GET.rs       # Implementação de filtros para requisições GET
+│   │   ├── POST.rs      # Implementação de filtros para requisições POST  
+│   │   ├── sever.rs     # Servidor TCP principal
+│   │   └── README.md    # Documentação específica do TCP
+```
+
+## 🛡️ Funcionalidades Principais
+
+### 🔥 Filtragem TCP Avançada
+| Módulo | Funcionalidade | Descrição |
+|--------|---------------|-----------|
+| `GET.rs` | Análise de requisições | Filtra requisições GET maliciosas |
+| `POST.rs` | Validação de dados | Verifica integridade de payloads POST |
+| `sever.rs` | Gerenciamento de conexões | Implementa handshake seguro |
+
+## 🔍 Análise Profunda de Pacotes TCP
+
+```mermaid
+graph TD
+    A[Pacote TCP] --> B{Handshake?}
+    B -->|SYN| C[Verifica Regras]
+    B -->|Dados| D[Inspeção Aprofundada]
+    C --> E[Permitir Conexão]
+    C --> F[Bloquear Conexão]
+    D --> G{É GET/POST?}
+    G -->|GET| H[Analisar URL/Headers]
+    G -->|POST| I[Validar Payload]
+```
+
+## ⚙️ Configuração TCP
+
+Exemplo de regras em `rules.json`:
+```json
+{
+  "tcp_rules": {
+    "allowed_ports": [80, 443, 22],
+    "get_protection": {
+      "max_url_length": 2048,
+      "blocked_patterns": ["../", "exec("]
+    },
+    "post_protection": {
+      "max_size": "10MB",
+      "content_validation": true
+    }
+  }
+}
+```
+
+## 🚀 Como Usar
+
+1. **Compilação**:
+```bash
+cd firewall/Protocols/TCP
+cargo build --release
+```
+
+2. **Execução**:
+```bash
+./target/release/sever -c rules.json
+```
+
+3. **Testes**:
+```bash
+cd ../Test
+cargo test
+```
+
+## 📌 Melhores Práticas
+
+1. **Para GET**:
+   - Implemente validação rigorosa de URLs
+   - Limite o tamanho de cabeçalhos
+   - Monitore padrões de scraping
+
+2. **Para POST**:
+   - Valide Content-Type
+   - Limite tamanho de payloads
+   - Implemente CSRF protection
+
+## 🔄 Fluxo de Trabalho
+
+```mermaid
+sequenceDiagram
+    Cliente->>+Firewall: SYN
+    Firewall->>-Cliente: SYN-ACK (se permitido)
+    Cliente->>+Firewall: GET/POST
+    Firewall->>Firewall: Inspeção Profunda
+    alt Dados Válidos
+        Firewall->>Servidor: Encaminha Requisição
+    else Dados Inválidos
+        Firewall->>Cliente: RST
+    end
+```
+
+## 🤝 Contribuição
+
+Para contribuir com o módulo TCP:
+1. Edite os arquivos em `Protocols/TCP/`
+2. Atualize os testes correspondentes
+3. Envie um Pull Request
 
 ---
 
-### **Funcionamento do TCP**
-1. **Estabelecimento da Conexão (3-Way Handshake)**  
-   - **SYN**: O cliente envia um pacote com a flag **SYN** para iniciar a conexão.  
-   - **SYN-ACK**: O servidor responde com **SYN** e **ACK** (confirmação).  
-   - **ACK**: O cliente confirma, estabelecendo a conexão.  
-
-2. **Transmissão de Dados**  
-   - Os dados são divididos em pacotes TCP, cada um com um **número de sequência**.  
-   - O receptor envia **ACK** para confirmar a recepção. Se um pacote se perder, o TCP retransmite.  
-
-3. **Controle de Fluxo e Congestionamento**  
-   - A **janela de recepção** ajusta a velocidade de envio para evitar sobrecarregar o receptor.  
-   - Algoritmos como **TCP Reno** ou **CUBIC** gerenciam congestionamentos na rede.  
-
-4. **Encerramento da Conexão**  
-   - **FIN**: Um dispositivo envia **FIN** para iniciar o encerramento.  
-   - **ACK + FIN**: O outro dispositivo confirma e envia seu próprio **FIN**.  
-   - **ACK**: A conexão é finalizada.  
-
----
-
-### **Exemplo Prático**
-Se você carrega uma página web:  
-1. Seu navegador (porta 54321) envia um **SYN** para o servidor web (porta 80).  
-2. O servidor responde com **SYN-ACK**.  
-3. Seu navegador envia **ACK** e depois os dados da requisição HTTP.  
-4. O servidor envia a página em pacotes TCP, com confirmações (**ACK**) a cada etapa.  
-
----
+**Nota**: Este módulo trabalha em conjunto com a implementação UDP para proteção completa da camada de transporte.
